@@ -1,5 +1,6 @@
 package com.parthamanna.blog.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +14,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.parthamanna.blog.entities.User;
 import com.parthamanna.blog.exceptions.ApiException;
 import com.parthamanna.blog.payloads.JwtAuthRequest;
 import com.parthamanna.blog.payloads.JwtAuthResponse;
+import com.parthamanna.blog.payloads.UserDto;
 import com.parthamanna.blog.security.JwtTokenHelper;
 import com.parthamanna.blog.services.UserService;
 
 @RestController
 @RequestMapping("/api/v1/auth/")
 public class AuthController {
+	@Autowired ModelMapper modelMapper;
 	@Autowired
 	private JwtTokenHelper jwtTokenHelper;
 
@@ -42,7 +46,7 @@ public class AuthController {
 
 		JwtAuthResponse response = new JwtAuthResponse();
 		response.setToken(token);
-		//response.setUser(this.mapper.map((User) userDetails, UserDto.class));
+		response.setUser(this.modelMapper.map((User) userDetails, UserDto.class));
 		return new ResponseEntity<JwtAuthResponse>(response, HttpStatus.OK);
 	}
 	
