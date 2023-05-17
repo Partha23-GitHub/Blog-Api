@@ -20,7 +20,7 @@ import com.parthamanna.blog.payloads.JwtAuthRequest;
 import com.parthamanna.blog.payloads.JwtAuthResponse;
 import com.parthamanna.blog.payloads.UserDto;
 import com.parthamanna.blog.security.JwtTokenHelper;
-import com.parthamanna.blog.services.UserService;
+//import com.parthamanna.blog.services.UserService;
 
 @RestController
 @RequestMapping("/api/v1/auth/")
@@ -35,8 +35,8 @@ public class AuthController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private UserService userService;
+//	@Autowired
+//	private UserService userService;
 
 	@PostMapping("/login")
 	public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest request) throws Exception {
