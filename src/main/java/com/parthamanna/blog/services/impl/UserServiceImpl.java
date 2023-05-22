@@ -1,6 +1,7 @@
 package com.parthamanna.blog.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -8,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.parthamanna.blog.config.AppConstants;
+import com.parthamanna.blog.entities.Role;
 import com.parthamanna.blog.entities.User;
 import com.parthamanna.blog.exceptions.ResourceNotFoundException;
 import com.parthamanna.blog.payloads.UserDto;
+import com.parthamanna.blog.repositories.RoleRepository;
 import com.parthamanna.blog.repositories.UserRepository;
 import com.parthamanna.blog.services.UserService;
 
@@ -24,9 +28,12 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private ModelMapper modelMapper;
 	
+	@Autowired private RoleRepository roleRepository;
+	
 	//for password encoder
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
 	@Override
 	public UserDto createUser(UserDto userDto) {
 		User user=this.dtoToUser(userDto);
@@ -106,6 +113,20 @@ public class UserServiceImpl implements UserService{
 //		userDto.setProfileHeadline(user.getProfileHeadline());
 		
 		return userDto;
+	}
+
+	@Override
+	public UserDto registerUser(UserDto userDto) {
+		User user = this.modelMapper.map(userDto, User.class);
+		//encode password
+		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+		//set roles
+		Role role = this.roleRepository.findById(AppConstants.NORMAL_USER).get();
+		
+		user.getRoles().add(role);
+		
+		User savedUser = this.userRepo.save(user);
+		return this.modelMapper.map(savedUser, UserDto.class);
 	}
 
 }

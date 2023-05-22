@@ -5,6 +5,9 @@ import java.util.List;
 import com.parthamanna.blog.payloads.UserDto;
 
 public interface UserService {
+	//for registered user
+	UserDto registerUser(UserDto userDto);
+	
 	//for adding a new User into DB
 	public UserDto createUser(UserDto userDto);
 	
